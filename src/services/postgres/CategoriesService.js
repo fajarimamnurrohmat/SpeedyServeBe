@@ -9,16 +9,16 @@ class CategoryService {
     }
 
     async addCategory({ nama_category }) {
-        const id = nanoid(16);
+        const id_category = nanoid(16);
         const query = {
-            text: "INSERT INTO category VALUES($1, $2) RETURNING id",
-            values: [id, nama_category],
+            text: "INSERT INTO category VALUES($1, $2) RETURNING id_category",
+            values: [id_category, nama_category],
         };
         const result = await this._pool.query(query);
-        if (!result.rows[0].id) {
+        if (!result.rows[0].id_category) {
             throw new InvariantError("Category gagal ditambahkan");
         }
-        return result.rows[0].id;
+        return result.rows[0].id_category;
     }
 
     async getCategory() {
@@ -26,10 +26,10 @@ class CategoryService {
         return result;
     }
 
-    async editCategoryById(id, { nama_category }) {
+    async editCategoryById(id_category, { nama_category }) {
         const query = {
-            text: "UPDATE category SET nama_category = $1 WHERE id = $2 RETURNING id",
-            values: [nama_category, id],
+            text: "UPDATE category SET nama_category = $1 WHERE id_category = $2 RETURNING id_category",
+            values: [nama_category, id_category],
         };
 
         const result = await this._pool.query(query);
@@ -39,10 +39,10 @@ class CategoryService {
         }
     }
 
-    async deleteCategoryById(id) {
+    async deleteCategoryById(id_category) {
         const query = {
-            text: "DELETE FROM category WHERE id = $1 RETURNING id",
-            values: [id],
+            text: "DELETE FROM category WHERE id_category = $1 RETURNING id_category",
+            values: [id_category],
         };
         const result = await this._pool.query(query);
         if (!result.rows.length) {

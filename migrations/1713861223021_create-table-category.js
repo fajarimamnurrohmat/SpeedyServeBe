@@ -4,7 +4,7 @@ exports.shorthands = undefined;
 
 exports.up = pgm => {
     pgm.createTable('category',{
-        id: {
+        id_category: {
             type: 'VARCHAR(50)',
             primaryKey: true,
         },

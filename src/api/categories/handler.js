@@ -44,8 +44,8 @@ class CategoryHandler {
         try {
             this._validator.validateCategoryPayload(request.payload);
             const { nama_category } = request.payload;
-            const { id } = request.params;
-            await this._service.editCategoryById(id, { nama_category });
+            const { id_category } = request.params;
+            await this._service.editCategoryById(id_category, { nama_category });
             return {
                 status: "success",
                 message: "Category berhasil diperbarui",

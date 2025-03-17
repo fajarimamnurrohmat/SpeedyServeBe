@@ -11,7 +11,7 @@ const routes = (handler) => [
     },
     {
         method: "PUT",
-        path: "/category/{id}",
+        path: "/category/{id_category}",
         handler: handler.putCategoryByIdHandler,
     },
     {
