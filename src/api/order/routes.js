@@ -8,6 +8,9 @@ const routes = (handler) => [
     method: "GET",
     path: "/order",
     handler: handler.getOrdersHandler,
+    options: {
+      auth: 'speedyserve_jwt',
+    },
   },
   {
     method: "GET",
