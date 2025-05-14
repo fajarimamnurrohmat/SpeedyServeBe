@@ -19,6 +19,9 @@ const routes = (handler) => [
         method: "PUT",
         path: "/menu/{id_menu}",
         handler: handler.putMenuByIdHandler,
+        options: {
+            auth: 'speedyserve_jwt',
+        },
     },
     {
         method: "DELETE",

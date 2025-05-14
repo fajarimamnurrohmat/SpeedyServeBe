@@ -1,3 +1,5 @@
+const ClientError = require("../../exceptions/ClientError");
+
 class CategoryHandler {
     constructor(service, validator) {
         this._service = service;
@@ -7,11 +9,23 @@ class CategoryHandler {
         this.putCategoryByIdHandler = this.putCategoryByIdHandler.bind(this);
         this.deleteCategoryByIdHandler = this.deleteCategoryByIdHandler.bind(this);
     }
+
+    // Helper function to check level
+    _checkLevel(level) {
+        if (level !== 3) {
+            throw new ClientError("Akses ditolak: Anda tidak memiliki hak akses", 403);
+        }
+    }
+
     async postCategoryHandler(request, h) {
         try {
+            const { level } = request.auth.credentials; // Mendapatkan level dari token
+            this._checkLevel(level); // Mengecek apakah level 3
+
             this._validator.validateCategoryPayload(request.payload);
             const { nama_category } = request.payload;
             const categoryId = await this._service.addCategory({ nama_category });
+
             const response = h.response({
                 status: "success",
                 message: "Category berhasil ditambahkan",
@@ -31,7 +45,8 @@ class CategoryHandler {
             return response;
         }
     }
-    async getCategoryHandler() {
+
+    async getCategoryHandler(request, h) {
         const category = await this._service.getCategory();
         return {
             status: "success",
@@ -40,12 +55,17 @@ class CategoryHandler {
             },
         };
     }
+
     async putCategoryByIdHandler(request, h) {
         try {
+            const { level } = request.auth.credentials; // Mendapatkan level dari token
+            this._checkLevel(level); // Mengecek apakah level 3
+
             this._validator.validateCategoryPayload(request.payload);
             const { nama_category } = request.payload;
             const { id_category } = request.params;
             await this._service.editCategoryById(id_category, { nama_category });
+
             return {
                 status: "success",
                 message: "Category berhasil diperbarui",
@@ -60,10 +80,15 @@ class CategoryHandler {
             return response;
         }
     }
+
     async deleteCategoryByIdHandler(request, h) {
         try {
+            const { level } = request.auth.credentials; // Mendapatkan level dari token
+            this._checkLevel(level); // Mengecek apakah level 3
+
             const { id } = request.params;
             await this._service.deleteCategoryById(id);
+
             return {
                 status: "success",
                 message: "Category berhasil dihapus",

@@ -55,6 +55,15 @@ class MenuHandler {
 
   async putMenuByIdHandler(request, h) {
     try {
+      const { level } = request.auth.credentials;
+      if (level < 3) {
+        return h
+          .response({
+            status: "fail",
+            message: "Anda tidak memiliki izin untuk mengedit menu",
+          })
+          .code(403);
+      }
       this._validator.validateMenuPayload(request.payload);
       const { id_category, nama_menu, harga_menu } = request.payload;
       const { id_menu } = request.params;

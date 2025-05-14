@@ -10,9 +10,25 @@ class OrderHandler {
     this.deleteOrderHandler = this.deleteOrderHandler.bind(this);
   }
 
+  // Helper function to check level
+  _checkLevelKoki(level) {
+    if (level !== 1) {
+        throw new ClientError("Akses ditolak: Anda tidak memiliki hak akses", 403);
+    }
+  }
+
   // 🛒 Menambahkan pesanan (POST /order)
   async postOrderHandler(request, h) {
     try {
+      const { level } = request.auth.credentials;
+      if (level < 2) {
+        return h
+          .response({
+            status: "fail",
+            message: "Anda tidak memiliki izin untuk mengedit menu",
+          })
+          .code(403);
+      }
       this._validator.validateOrderPayload(request.payload);
       const orderId = await this._service.addOrder(request.payload);
 
@@ -64,6 +80,8 @@ class OrderHandler {
   // 🔄 Mengubah status pesanan (PUT /order/{id}/status)
   async putOrderStatusHandler(request, h) {
     try {
+      const { level } = request.auth.credentials; // Mendapatkan level dari token
+      this._checkLevelKoki(level); // Mengecek apakah level 1
       this._validator.validateUpdateStatusOrder(request.payload);
       const { id_order } = request.params;
       const { status_order } = request.payload;
@@ -87,6 +105,15 @@ class OrderHandler {
   // ❌ Menghapus pesanan (DELETE /order/{id})
   async deleteOrderHandler(request, h) {
     try {
+      const { level } = request.auth.credentials;
+      if (level < 2) {
+        return h
+          .response({
+            status: "fail",
+            message: "Anda tidak memiliki izin untuk mengedit menu",
+          })
+          .code(403);
+      }
       const { id } = request.params;
       await this._service.deleteOrder(id);
 

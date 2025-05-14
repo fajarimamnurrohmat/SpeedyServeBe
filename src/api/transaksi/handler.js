@@ -11,13 +11,25 @@ class TransactionHandler {
     this.deleteTransactionHandler = this.deleteTransactionHandler.bind(this);
   }
 
-  // 📝 Menambahkan transaksi (POST /transaction)
+  // Helper function to check level
+  _checkLevelKoki(level) {
+    if (level !== 1) {
+      throw new ClientError(
+        "Akses ditolak: Anda tidak memiliki hak akses",
+        403
+      );
+    }
+  }
+
+  // Menambahkan transaksi (POST /transaction)
   async postTransactionHandler(request, h) {
     try {
+      const { level } = request.auth.credentials; // Mendapatkan level dari token
+      this._checkLevelKoki(level); // Mengecek apakah level 1
       this._validator.validateTransactionPayload(request.payload);
       const id_transaksi = `TRX-${nanoid(16)}`;
       const { id_order } = request.payload;
-      
+
       await this._service.addTransaksi({ id_transaksi, id_order });
 
       const response = h.response({
@@ -38,7 +50,18 @@ class TransactionHandler {
   }
 
   // 📜 Mendapatkan semua transaksi (GET /transaction)
-  async getTransactionsHandler() {
+  async getTransactionsHandler(request, h) {
+    const { level } = request.auth.credentials;
+
+    if (level !== 3) {
+      return h
+        .response({
+          status: "fail",
+          message: "Anda tidak memiliki akses untuk melihat transaksi.",
+        })
+        .code(403);
+    }
+
     const transactions = await this._service.getTransaksi();
     return {
       status: "success",
@@ -65,7 +88,7 @@ class TransactionHandler {
     }
   }
 
-  // ❌ Menghapus transaksi (DELETE /transaction/{id})
+  // Menghapus transaksi (DELETE /transaction/{id})
   async deleteTransactionHandler(request, h) {
     try {
       const { id_transaksi } = request.params;

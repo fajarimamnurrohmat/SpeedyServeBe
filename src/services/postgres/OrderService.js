@@ -101,7 +101,9 @@ class OrderService {
     return orders.rows;
   }
 
+  // ✅ Ambil Pesanan Berdasarkan ID
   async getOrderById(id_order) {
+    // Mengambil informasi order berdasarkan id
     const query = {
       text: 'SELECT * FROM "order" WHERE id_order = $1',
       values: [id_order],
@@ -112,7 +114,20 @@ class OrderService {
       throw new NotFoundError("Pesanan tidak ditemukan");
     }
 
-    return result.rows[0];
+    const order = result.rows[0];
+
+    // Ambil detail pesanan untuk order yang ditemukan
+    const detailQuery = {
+      text: `SELECT d.id_detail_order, d.id_menu, m.nama_menu, d.jumlah, d.subtotal
+           FROM detail_order d
+           JOIN menu m ON d.id_menu = m.id_menu
+           WHERE d.id_order = $1`,
+      values: [order.id_order],
+    };
+    const detailResult = await this._pool.query(detailQuery);
+    order.detail_pesanan = detailResult.rows; // Menyimpan detail pesanan ke dalam order
+
+    return order; // Mengembalikan order dengan detail pesanan
   }
 
   // ✅ Update Status Pesanan
