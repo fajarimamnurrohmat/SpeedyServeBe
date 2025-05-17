@@ -78,13 +78,24 @@ class OrderService {
   // ✅ Ambil Daftar Pesanan
   async getOrders() {
     const orderQuery = `
-      SELECT id_order, nama_pemesan, no_hp, opsi_pesanan, total_harga, jumlah_bayar, kembalian, keterangan, status_order 
+      SELECT 
+        id_order, 
+        nama_pemesan, 
+        no_hp, 
+        opsi_pesanan, 
+        total_harga, 
+        jumlah_bayar, 
+        kembalian, 
+        keterangan, 
+        status_order,
+        waktu -- tambahkan waktu di sini
       FROM "order"
       WHERE status_order != 'Selesai'
       ORDER BY id_order DESC
     `;
+    
     const orders = await this._pool.query(orderQuery);
-
+  
     // Ambil detail pesanan untuk setiap order
     for (let order of orders.rows) {
       const detailQuery = {
@@ -97,9 +108,10 @@ class OrderService {
       const detailResult = await this._pool.query(detailQuery);
       order.detail_pesanan = detailResult.rows;
     }
-
+  
     return orders.rows;
   }
+  
 
   // ✅ Ambil Pesanan Berdasarkan ID
   async getOrderById(id_order) {

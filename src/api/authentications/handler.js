@@ -15,27 +15,31 @@ class AuthenticationsHandler {
   async postAuthenticationHandler(request, h) {
     try {
       this._validator.validatePostAuthenticationPayload(request.payload);
-
+  
       const { username, password } = request.payload;
       const { id, level } = await this._usersService.verifyUserCredential(
         username,
         password
       );
-
+  
       const accessToken = this._tokenManager.generateAccessToken({ id, level });
       const refreshToken = this._tokenManager.generateRefreshToken({
         id,
         level,
       });
-
+  
       await this._authenticationsService.addRefreshToken(refreshToken);
-
+  
       const response = h.response({
         status: "success",
         message: "Authentication berhasil ditambahkan",
         data: {
           accessToken,
           refreshToken,
+          user: {
+            id,
+            level,
+          },
         },
       });
       response.code(201);
@@ -49,7 +53,7 @@ class AuthenticationsHandler {
         response.code(error.statusCode);
         return response;
       }
-
+  
       // Server ERROR!
       const response = h.response({
         status: "error",
@@ -60,6 +64,7 @@ class AuthenticationsHandler {
       return response;
     }
   }
+  
 
   async putAuthenticationHandler(request, h) {
     try {
