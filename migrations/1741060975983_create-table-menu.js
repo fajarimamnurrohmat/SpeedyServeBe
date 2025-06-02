@@ -22,6 +22,10 @@ exports.up = pgm => {
             type: 'NUMERIC(10,2)',
             notNull: true,
         },
+        tersedia: {
+            type: 'BOOLEAN',
+            notNull: true,
+        },
     });
 };
 

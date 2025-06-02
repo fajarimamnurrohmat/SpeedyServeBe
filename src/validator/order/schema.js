@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 const OrderPayloadSchema = Joi.object({
   nama_pemesan: Joi.string().required(),
-  no_hp: Joi.string().pattern(/^[0-9]+$/).required(), // Hanya angka
+  no_hp:Joi.string().allow("").optional(), // Hanya angka
   opsi_pesanan: Joi.string().valid("Dine In", "Take Away").required(), // Hanya bisa "Dine In" atau "Take Away"
   jumlah_bayar: Joi.number().positive().required(),
   keterangan: Joi.string().allow("").optional(), // Bisa kosong

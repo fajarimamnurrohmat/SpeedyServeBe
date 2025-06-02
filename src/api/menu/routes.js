@@ -16,6 +16,22 @@ const routes = (handler) => [
         },
     },
     {
+        method: "GET",
+        path: "/available_menu",
+        handler: handler.getAvailableMenuHandler,
+        options: {
+            auth: 'speedyserve_jwt',
+        },
+    },
+    {
+        method: "PUT",
+        path: "/menu_availability/{id_menu}",
+        handler: handler.putMenuAvailabilityHandler,
+        options: {
+            auth: 'speedyserve_jwt',
+        },
+    },
+    {
         method: "PUT",
         path: "/menu/{id_menu}",
         handler: handler.putMenuByIdHandler,
