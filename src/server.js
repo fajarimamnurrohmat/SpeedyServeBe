@@ -44,8 +44,8 @@ const init = async () => {
   const transaksiService = new TransaksiService();
 
   const server = Hapi.server({
-    port: 3000,
-    host: "localhost",
+    port: process.env.PORT || 3000, // Gunakan PORT dari environment atau fallback ke 3000
+    host: "0.0.0.0", // Gunakan 0.0.0.0 untuk production di Railway
     routes: {
       cors: {
         origin: ["*"],

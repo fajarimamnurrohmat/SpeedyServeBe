@@ -8,6 +8,7 @@ class CategoryHandler {
         this.getCategoryHandler = this.getCategoryHandler.bind(this);
         this.putCategoryByIdHandler = this.putCategoryByIdHandler.bind(this);
         this.deleteCategoryByIdHandler = this.deleteCategoryByIdHandler.bind(this);
+        this.sayHelloHandler = this.sayHelloHandler.bind(this);
     }
 
     // Helper function to check level
@@ -102,6 +103,13 @@ class CategoryHandler {
             response.code(404);
             return response;
         }
+    }
+
+    async sayHelloHandler(request, h) {
+    return {
+        status: "success",
+        message: "Hallo",
+    };
     }
 }
 

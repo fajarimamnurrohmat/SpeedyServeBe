@@ -31,5 +31,10 @@ const routes = (handler) => [
             auth: 'speedyserve_jwt',
         },
     },
+    {
+    method: 'GET',
+    path: '/category/hello',
+    handler: handler.sayHelloHandler,
+}
 ];
 module.exports = routes;
