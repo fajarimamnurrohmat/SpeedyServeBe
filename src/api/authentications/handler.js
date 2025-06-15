@@ -57,7 +57,7 @@ class AuthenticationsHandler {
       // Server ERROR!
       const response = h.response({
         status: "error",
-        message: "Maaf terjadi kegagalan pada server kami.",
+        message: "Maaf kredensial yang anda berikan salah.",
       });
       response.code(500);
       console.error(error);
