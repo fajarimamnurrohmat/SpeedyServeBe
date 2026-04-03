@@ -1,12 +1,14 @@
-const { Pool } = require("pg");
+//const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const InvariantError = require("../../exceptions/InvariantError");
+const AuthenticationError = require("../../exceptions/AuthenticationError");
 const bcrypt = require("bcryptjs");
+const pool = require("../../database/pool");
 
 class UsersService {
   constructor() {
-    this._pool = new Pool();
+    this._pool = pool;
   }
 
   async verifyNewUsername(username) {

@@ -1,11 +1,12 @@
-const { Pool } = require("pg");
+//const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const InvariantError = require("../../exceptions/InvariantError");
+const pool = require("../../database/pool");
 
 class TransaksiService {
     constructor() {
-        this._pool = new Pool();
+        this._pool = pool;
     }
 
     // Menambahkan transaksi baru

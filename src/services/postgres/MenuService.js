@@ -1,11 +1,12 @@
-const { Pool } = require("pg");
+//const { Pool } = require("pg");
 const { nanoid } = require("nanoid");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const InvariantError = require("../../exceptions/InvariantError");
+const pool = require("../../database/pool");
 
 class MenuService {
   constructor() {
-    this._pool = new Pool();
+    this._pool = pool;
   }
 
   async addMenu({ id_category, nama_menu, harga_menu, tersedia }) {

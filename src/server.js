@@ -33,6 +33,7 @@ const authentications = require("./api/authentications");
 const AuthenticationsService = require("./services/postgres/AuthenticationsService");
 const AuthenticationsValidator = require("./validator/authentications");
 const TokenManager = require("./tokenize/TokenManager");
+const pool = require("./database/pool");
 //const { verify } = require("jsonwebtoken");
 
 const init = async () => {
@@ -127,6 +128,9 @@ const init = async () => {
   ]);
 
   await server.start();
+  pool.query("SELECT NOW()")
+  .then(res => console.log("DB OK ✅", res.rows))
+  .catch(err => console.error("DB ERROR ❌", err));
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
 init();
